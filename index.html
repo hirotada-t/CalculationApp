@@ -1,33 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
 
-        <!-- Vue.js CDN -->
-        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
-        <script src="./recursion.js"></script>
-    </head>   
-    <body>
-        
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <!-- Vue.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="./calc.js" defer></script>
+</head>
+
+<body>
+
+    <div id="app">
         <div>
-            <div>
-                <label>input:</label>
-                <input type="text"/>
-            </div>
-
-            <div>
-                <label>total:</label>
-                <input type="text"/>
-            </div>
-
-            <div class="buttons" style="width: 300px; padding-top:10px;">
-                <button>1</button>
-                <button>2</button>
-                <button>3</button>
-            </div>
+            <label>input:</label>
+            <input type="text" v-model="input">
         </div>
 
-    </body>
+        <div>
+            <label>total:</label>
+            <input type="text" v-model="result" />
+        </div>
+
+        <div class="buttons" style="width: 300px; padding-top:10px;">
+            <button @click="addNum($event)">1</button>
+            <button @click="addNum($event)">2</button>
+            <button @click="addNum($event)">3</button>
+            <button @click="addNum($event)">4</button>
+            <button @click="addNum($event)">5</button>
+            <button @click="addNum($event)">6</button>
+            <button @click="addNum($event)">7</button>
+            <button @click="addNum($event)">8</button>
+            <button @click="addNum($event)">9</button>
+            <button @click="addNum($event)">0</button>
+            <button @click="addNum($event)">+</button>
+            <button @click="addNum($event)">-</button>
+            <button @click="addNum($event)">/</button>
+            <button @click="addNum($event)">*</button>
+            <button @click="calc">=</button>
+            <button @click="clearResult">CL</button>
+        </div>
+    </div>
+
+</body>
+
 </html>
