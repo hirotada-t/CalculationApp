@@ -35,10 +35,10 @@
             <button @click="addNum($event)">8</button>
             <button @click="addNum($event)">9</button>
             <button @click="addNum($event)">0</button>
-            <button @click="addNum($event)">+</button>
-            <button @click="addNum($event)">-</button>
-            <button @click="addNum($event)">/</button>
-            <button @click="addNum($event)">*</button>
+            <button @click="addNum($event)" :disabled="clicked">+</button>
+            <button @click="addNum($event)" :disabled="clicked">-</button>
+            <button @click="addNum($event)" :disabled="clicked">/</button>
+            <button @click="addNum($event)" :disabled="clicked">*</button>
             <button @click="calc">=</button>
             <button @click="clearResult">CL</button>
         </div>
