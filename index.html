@@ -15,13 +15,13 @@
 
     <div id="app">
         <div>
-            <label>input:</label>
-            <input type="text" v-model="formula">
+            <label>formula:</label>
+            <input type="text" v-model="formula" disabled="true">
         </div>
 
         <div>
-            <label>total:</label>
-            <input type="text" v-model="result" />
+            <label>result:</label>
+            <input type="number" v-model="result" disabled="disabled" />
         </div>
 
         <div class="buttons" style="width: 300px; padding-top:10px;">
@@ -39,7 +39,8 @@
             <button @click="addNum($event)" :disabled="clicked">-</button>
             <button @click="addNum($event)" :disabled="clicked">/</button>
             <button @click="addNum($event)" :disabled="clicked">*</button>
-            <button @click="calc">=</button>
+            <button @click="checkFormula">=</button>
+            <button @click="bsFormula">BS</button>
             <button @click="clearResult">CL</button>
         </div>
     </div>
