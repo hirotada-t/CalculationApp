@@ -2,28 +2,73 @@ var app = new Vue({
   el: "#app",
   data: {
     formula: "",
+    lastInput: "",
     result: "",
     clicked: true
   },
   methods: {
     addNum: function (e) {
       let input = e.currentTarget.innerText;
-      this.checkFormula();
+      this.lastInput = this.formula[this.formula.length - 1];
+      this.clicked = false;
+
+      if (!Number(this.lastInput) && !Number(input)) {
+        this.formula = this.formula.slice(0, this.formula.length - 1);
+      }
+      if (!Number(input)) input = " " + input + " ";
       this.formula += input;
-      this.checkFormula();
     },
-    checkFormula:function(){
-      const latestFormula = this.formula[this.formula.length - 1];
-      if (Number(latestFormula)) this.clicked = false;
-      else this.clicked = true;
+    checkFormula: function () {
+      this.calc();
     },
     calc: function () {
-      this.result = this.formula;
+      this.result = calcNum(this.formula);
       this.formula = "";
+      this.clicked = true;
+    },
+    bsFormula: function () {
+
     },
     clearResult: function () {
       this.result = "";
       this.formula = "";
+      this.clicked = true;
     }
   }
 })
+
+function calcNum(str) {
+  const formulaArr = str.split(" ");
+  const temp = [];
+  for (let i = 1; i < formulaArr.length; i += 2) {
+    if (formulaArr[i] == "*" || formulaArr[i] == "/") temp.push(i);
+  }
+  //[5,7]
+  if (temp.length > 0) {
+    for (let j = 0; j < temp.length; j++) {
+      if (formulaArr[temp[j]] == "*") {
+        formulaArr[temp[j] + 1] = Number(formulaArr[temp[j] - 1]) * Number(formulaArr[temp[j] + 1]);
+        formulaArr[temp[j] - 1] = 0;
+      } else if (formulaArr[temp[j]] == "/") {
+        formulaArr[temp[j] + 1] = Number(formulaArr[temp[j] - 1]) / Number(formulaArr[temp[j] + 1]);
+        formulaArr[temp[j] - 1] = 0;
+      }
+    }
+  }
+  const rmZero = formulaArr.filter(f =>f !== 0);
+  const rmX = rmZero.filter(f =>f !== "*");
+  const rmSrash = rmX.filter(f =>f !== "/");
+  console.log(rmSrash)
+  for (let j = 1; j < rmSrash.length; j+= 2) {
+    if(rmSrash[j + 1] == 0) continue;
+    if(rmSrash[j] == "+") {
+      rmSrash[j + 1] = Number(rmSrash[j - 1]) + Number(rmSrash[j + 1]);
+      rmSrash[j - 1] = 0;
+    } else if(rmSrash[j] == "-") {
+      rmSrash[j + 1] = Number(rmSrash[j - 1]) - Number(rmSrash[j + 1]);
+      rmSrash[j - 1] = 0;
+    } 
+  }
+
+  return rmSrash[rmSrash.length - 1]
+}
