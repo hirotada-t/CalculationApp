@@ -45,7 +45,7 @@
                     <div class="nums row gy-3 gx-0">
                         <div class="col-4 text-center" v-for="num of nums" :key="num">
                             <button class="btn btn-dark btn-lg rounded-circle border-0 p-0" type="button"
-                                @click="addNum($event)">{{num}}</button>
+                                @click="inputBtn($event)">{{num}}</button>
                         </div>
                     </div>
                     <div class="nums row gy-3 gx-0 mt-0">
@@ -55,15 +55,15 @@
                         </div>
                         <div class="col-4 text-center">
                             <button class="btn btn-dark btn-lg rounded-circle border-0 p-0" type="button"
-                                @click="addNum($event)">0</button>
+                                @click="inputBtn($event)">0</button>
                         </div>
                     </div>
                 </div>
                 <div class="col-3 border-start border-2">
                     <div class="signs row gy-3 gx-0 mx-auto">
-                        <div class="col-12 text-center" v-for="sign of signs" :key="sign">
+                        <div class="col-12 text-center" v-for="(value, key) of signs">
                             <button class="btn btn-secondary btn-lg rounded-circle border-0 p-0" type="button"
-                                @click="addNum($event)" :disabled="clicked">{{sign}}</button>
+                                @click="inputBtn($event)" :disabled="clicked">{{key}}</button>
                         </div>
                     </div>
                 </div>
@@ -74,11 +74,11 @@
             <div class="signs row gy-3 gx-0">
                 <!-- <div class="col-3 text-center">
                     <button class="btn btn-dark btn-lg rounded-circle border-0 p-0" type="button"
-                        @click="addNum($event)">(</button>
+                        @click="inputBtn($event)">(</button>
                 </div>
                 <div class="col-3 text-center">
                     <button class="btn btn-dark btn-lg rounded-circle border-0 p-0" type="button"
-                        @click="addNum($event)">)</button>
+                        @click="inputBtn($event)">)</button>
                 </div>
                 <div class="col-6 text-center">
                     <button class="btn btn-success btn-lg rounded-pill w-140 border-0 p-0" type="button"
