@@ -26,7 +26,7 @@
                     <label for="formula">formula:</label>
                 </div>
                 <div class="col-12">
-                    <input class="w-100" id="formula" type="text" v-model="formula" disabled="true">
+                    <input class="w-100" id="formula" type="text" v-model="formulaStr" disabled="true">
                 </div>
             </div>
             <div class="row mt-2">
@@ -72,7 +72,7 @@
 
         <div class="container buttons pt-4">
             <div class="signs row gy-3 gx-0">
-                <div class="col-3 text-center">
+                <!-- <div class="col-3 text-center">
                     <button class="btn btn-dark btn-lg rounded-circle border-0 p-0" type="button"
                         @click="addNum($event)">(</button>
                 </div>
@@ -83,7 +83,7 @@
                 <div class="col-6 text-center">
                     <button class="btn btn-success btn-lg rounded-pill w-140 border-0 p-0" type="button"
                         @click="bsFormula">IRR</button>
-                </div>
+                </div> -->
                 <div class="col-6 text-center">
                     <button class="btn btn-primary btn-lg rounded-pill w-140 border-0 p-0" type="button"
                         @click="bsFormula">BS</button>
