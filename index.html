@@ -34,7 +34,7 @@
                     <label for="result">result:</label>
                 </div>
                 <div class="col-12">
-                    <input class="w-100" id="result" type="number" v-model="result" disabled="disabled" />
+                    <input class="w-100" id="result" type="text" v-model="result" disabled="disabled" />
                 </div>
             </div>
         </div>
@@ -51,7 +51,7 @@
                     <div class="nums row gy-3 gx-0 mt-0">
                         <div class="col-8 text-center">
                             <button class="btn btn-dark btn-lg rounded-pill w-140 border-0 p-0" type="button"
-                                @click="checkFormula">=</button>
+                                @click="checkFormula" :disabled="clicked">=</button>
                         </div>
                         <div class="col-4 text-center">
                             <button class="btn btn-dark btn-lg rounded-circle border-0 p-0" type="button"
@@ -70,20 +70,25 @@
             </div>
         </div>
 
-        <div class="container buttons pt-4">
+        <!-- <div class="container buttons pt-4">
             <div class="signs row gy-3 gx-0">
-                <!-- <div class="col-3 text-center">
-                    <button class="btn btn-dark btn-lg rounded-circle border-0 p-0" type="button"
-                        @click="inputBtn($event)">(</button>
+                <div class="col-3 text-center">
+                    <button class="btn btn-success btn-lg rounded-circle w-120 border-0 p-0" type="button"
+                        @click="bsFormula">sin</button>
                 </div>
                 <div class="col-3 text-center">
-                    <button class="btn btn-dark btn-lg rounded-circle border-0 p-0" type="button"
-                        @click="inputBtn($event)">)</button>
+                    <button class="btn btn-success btn-lg rounded-circle w-120 border-0 p-0" type="button"
+                        @click="bsFormula">cos</button>
                 </div>
-                <div class="col-6 text-center">
-                    <button class="btn btn-success btn-lg rounded-pill w-140 border-0 p-0" type="button"
-                        @click="bsFormula">IRR</button>
-                </div> -->
+                <div class="col-3 text-center">
+                    <button class="btn btn-success btn-lg rounded-circle w-120 border-0 p-0" type="button"
+                        @click="bsFormula">tan</button>
+                </div>
+            </div>
+        </div> -->
+
+        <div class="container buttons pt-4">
+            <div class="signs row gy-3 gx-0">
                 <div class="col-6 text-center">
                     <button class="btn btn-primary btn-lg rounded-pill w-140 border-0 p-0" type="button"
                         @click="bsFormula">BS</button>
