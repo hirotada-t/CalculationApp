@@ -7,7 +7,7 @@ var app = new Vue({
     formulaStr: "",
     result: "",
     nums: [9, 8, 7, 6, 5, 4, 3, 2, 1],
-    signs: {"÷":1, "×":1, "－":1, "＋":1},
+    signs: { "÷": 1, "×": 1, "－": 1, "＋": 1 },
     clicked: true
   },
 
@@ -58,6 +58,10 @@ var app = new Vue({
       if (this.signs[prevInput] == 1 && this.signs[this.input] == 1) {
         this.formulaArr[this.formulaArr.length - 1] = this.input;
       }
+      // 一つ前がゼロで入力が数字の場合は差し替える
+      else if (prevInput == 0 && this.signs[this.input] != 1) {
+        this.formulaArr[this.formulaArr.length - 1] = this.input;
+      }
       // 一つ前が数値で入力も数値の場合は一つ前に追加する
       else if (this.signs[prevInput] != 1 && this.signs[this.input] != 1) {
         this.formulaArr[this.formulaArr.length - 1] += this.input;
@@ -73,10 +77,10 @@ var app = new Vue({
       // const leftParenthesesIndex = this.checkBrackets("(");
       // const rightParenthesesIndex = this.checkBrackets(")");
 
-      // console.log(leftParenthesesIndex)
-      // console.log(rightParenthesesIndex)
-
-      this.calc();
+      if (this.signs[this.formulaArr[this.formulaArr.length - 1]]) this.error();
+      else { 
+        this.calc();
+      }
     },
 
     // checkBrackets(lr) {
@@ -89,9 +93,9 @@ var app = new Vue({
     //   return parenthesesIndex;
     // },
 
-    // error() {
-    //   alert("数式が間違えています。");
-    // },
+    error() {
+      alert("数式が間違えています。");
+    },
 
     calc() {
       this.result = this.calcNum;
@@ -107,12 +111,9 @@ var app = new Vue({
     },
 
     clearResult() {
-      if (this.result == "") {
-        this.formulaArr = [];
-        this.formulaStr = "";
-      } else {
-        this.result = "";
-      }
+      this.formulaArr = [];
+      this.formulaStr = "";
+      this.result = "";
       this.clicked = true;
     }
   },
@@ -121,41 +122,50 @@ var app = new Vue({
 
     calcNum() {
       const temp = [];
-      // ×÷の位置を検索
+      // ✕÷の位置を検索してtempに追加
       for (let i = 1; i < this.formulaArr.length; i += 2) {
         if (this.formulaArr[i] == "×" || this.formulaArr[i] == "÷") temp.push(i);
       }
 
-      // 乗算・除算を実行
+      // ✕÷を見つけたら乗算・除算を実行
       if (temp.length > 0) {
         for (let j = 0; j < temp.length; j++) {
+          // 乗算の場合
           if (this.formulaArr[temp[j]] == "×") {
             this.formulaArr[temp[j] + 1] = Number(this.formulaArr[temp[j] - 1]) * Number(this.formulaArr[temp[j] + 1]);
             this.formulaArr[temp[j] - 1] = 0;
-          } else if (this.formulaArr[temp[j]] == "÷") {
+            console.log(this.formulaArr)
+          }
+          // 除算の場合
+          else if (this.formulaArr[temp[j]] == "÷") {
+            if (this.formulaArr[temp[j] + 1] == 0) return "Infinity";
             this.formulaArr[temp[j] + 1] = Number(this.formulaArr[temp[j] - 1]) / Number(this.formulaArr[temp[j] + 1]);
             this.formulaArr[temp[j] - 1] = 0;
+            console.log(this.formulaArr)
           }
         }
       }
 
-      // zero,✕,÷を除いた要素を抽出
+      // 残っているzero,✕,÷を取り除く
       const rmZero = this.formulaArr.filter(f => f !== 0);
-      const rmX = rmZero.filter(f => f !== "×");
-      const rmSrash = rmX.filter(f => f !== "÷");
+      const rmZeroX = rmZero.filter(f => f !== "×");
+      const rmZeroXSrash = rmZeroX.filter(f => f !== "÷");
+      console.log(rmZeroXSrash)
+      if (rmZeroXSrash.length == 0) return 0;
+      if (rmZeroXSrash.length == 1) return rmZeroXSrash[0];
 
       // 加算・減算を実行
-      for (let j = 1; j < rmSrash.length; j += 2) {
-        if (rmSrash[j + 1] == 0) continue;
-        if (rmSrash[j] == "＋") {
-          rmSrash[j + 1] = Number(rmSrash[j - 1]) + Number(rmSrash[j + 1]);
-          rmSrash[j - 1] = 0;
-        } else if (rmSrash[j] == "－") {
-          rmSrash[j + 1] = Number(rmSrash[j - 1]) - Number(rmSrash[j + 1]);
-          rmSrash[j - 1] = 0;
+      for (let j = 1; j < rmZeroXSrash.length; j += 2) {
+        if (rmZeroXSrash[j + 1] == 0) continue;
+        if (rmZeroXSrash[j] == "＋") {
+          rmZeroXSrash[j + 1] = Number(rmZeroXSrash[j - 1]) + Number(rmZeroXSrash[j + 1]);
+          rmZeroXSrash[j - 1] = 0;
+        } else if (rmZeroXSrash[j] == "－") {
+          rmZeroXSrash[j + 1] = Number(rmZeroXSrash[j - 1]) - Number(rmZeroXSrash[j + 1]);
+          rmZeroXSrash[j - 1] = 0;
         }
       }
-      return rmSrash[rmSrash.length - 1]
+      return rmZeroXSrash[rmZeroXSrash.length - 1]
     }
   }
 })
