@@ -7,8 +7,7 @@ var app = new Vue({
     formulaStr: "",
     result: "",
     nums: [9, 8, 7, 6, 5, 4, 3, 2, 1],
-    signs: { "÷": 1, "×": 1, "－": 1, "＋": 1 },
-    clicked: true
+    signs: { "÷": true, "×": true, "－": true, "＋": true },
   },
 
   created() {
@@ -24,13 +23,17 @@ var app = new Vue({
         "+": Object.keys(this.signs)[3],
       }
 
+      // 数字またはゼロを入力した場合
       if (Number(e.key) || e.key == 0) {
         this.input = e.key;
-        this.addNum();
-      } else if (typeof inputKeyFunc[e.key] != "undefined" && this.formulaArr.length != 0) {
-        this.input = inputKeyFunc[e.key];
-        this.addNum();
+        this.checkInput();
       }
+      // 符号を入力した場合
+      else if (typeof inputKeyFunc[e.key] != "undefined") {
+        this.input = inputKeyFunc[e.key];
+        this.checkInput();
+      }
+      // その他の処理
       else if (e.key == "Backspace") this.bsFormula();
       else if (e.key == "Escape") this.clearResult();
       else if (e.key == "Enter") this.checkFormula();
@@ -38,49 +41,65 @@ var app = new Vue({
 
     inputBtn(e) {
       this.input = e.currentTarget.innerText;
-      this.addNum();
+      this.checkInput();
     },
 
-    addNum() {
+    checkInput() {
+      // 最初の入力はマイナスか数字のみ入力可能
       if (this.formulaArr.length == 0) {
-        this.formulaArr.push(this.input);
-        this.formulaStr = this.formulaArr.join(" ");
-        this.clicked = false;
-      } else {
-        this.checkAddNum();
+        if (this.input == "－" || Number(this.input) || this.input == 0) {
+          this.formulaArr.push(this.input);
+        }
       }
-    },
-
-    checkAddNum() {
-      const prevInput = this.formulaArr[this.formulaArr.length - 1];
-
-      // 一つ前が符号で入力も符号の場合は差し替える
-      if (this.signs[prevInput] == 1 && this.signs[this.input] == 1) {
-        this.formulaArr[this.formulaArr.length - 1] = this.input;
+      // 最初がマイナスの場合は数字のみ入力可能
+      else if (this.formulaArr.length == 1 && this.formulaArr[0] == "－") {
+        if (!Number(this.input)) {
+          alert("ゼロ以外の数字を入力してください");
+        } else {
+          this.formulaArr[0] = "-" + this.input;
+        }
       }
-      // 一つ前がゼロで入力が数字の場合は差し替える
-      else if (prevInput == 0 && this.signs[this.input] != 1) {
-        this.formulaArr[this.formulaArr.length - 1] = this.input;
-      }
-      // 一つ前が数値で入力も数値の場合は一つ前に追加する
-      else if (this.signs[prevInput] != 1 && this.signs[this.input] != 1) {
-        this.formulaArr[this.formulaArr.length - 1] += this.input;
-      }
-      // それ以外（一方が符号で他方が数値）の場合は配列に追加する
       else {
-        this.formulaArr.push(this.input);
+        const prevInput = this.formulaArr[this.formulaArr.length - 1];
+        
+        // 一つ前が符号で入力がマイナスの場合は半角にする
+        if (this.signs[prevInput] && this.input == "－") {
+          this.formulaArr.push("-");
+        }
+        // 一つ前が半角マイナスの場合は数字のみマイナスの後に追加する
+        else if (prevInput == "-") {
+          if (Number(this.input)) {
+            this.formulaArr[this.formulaArr.length - 1] += this.input;
+          }
+        }
+        // 一つ前が符号で入力も符号の場合は差し替える
+        else if (this.signs[prevInput] && this.signs[this.input]) {
+            this.formulaArr[this.formulaArr.length - 1] = this.input;
+        }
+        // 一つ前がゼロで入力が数字の場合は差し替える
+        else if (prevInput == 0 && !this.signs[this.input]) {
+          this.formulaArr[this.formulaArr.length - 1] = this.input;
+        }
+        // 一つ前が数値で入力も数値の場合は一つ前に追加する
+        else if (!this.signs[prevInput] && !this.signs[this.input]) {
+          this.formulaArr[this.formulaArr.length - 1] += this.input;
+        }
+        // それ以外（一方が符号で他方が数値）の場合は配列に追加する
+        else {
+          this.formulaArr.push(this.input);
+        }
       }
       this.formulaStr = this.formulaArr.join(" ");
     },
-
+    
     checkFormula() {
+      console.log(this.formulaArr)
       // const leftParenthesesIndex = this.checkBrackets("(");
       // const rightParenthesesIndex = this.checkBrackets(")");
 
-      if (this.signs[this.formulaArr[this.formulaArr.length - 1]]) this.error();
-      else { 
-        this.calc();
-      }
+      if (this.signs[this.formulaArr[this.formulaArr.length - 1]]) alert("数式の最後を数字にしてください");
+      else if (this.formulaArr.length == 0) alert("数式を入力してください");
+      else this.calc();
     },
 
     // checkBrackets(lr) {
@@ -93,28 +112,21 @@ var app = new Vue({
     //   return parenthesesIndex;
     // },
 
-    error() {
-      alert("数式が間違えています。");
-    },
-
     calc() {
       this.result = this.calcNum;
       this.formulaArr = [];
       this.formulaStr = "";
-      this.clicked = true;
     },
 
     bsFormula() {
       this.formulaArr.splice(-1, 1);
       this.formulaStr = this.formulaArr.join(" ");
-      if (this.formulaArr.length == 0) this.clicked = true;
     },
 
     clearResult() {
       this.formulaArr = [];
       this.formulaStr = "";
       this.result = "";
-      this.clicked = true;
     }
   },
 
@@ -123,7 +135,7 @@ var app = new Vue({
     calcNum() {
       const temp = [];
       // ✕÷の位置を検索してtempに追加
-      for (let i = 1; i < this.formulaArr.length; i += 2) {
+      for (let i = 1; i < this.formulaArr.length; i += 1) {
         if (this.formulaArr[i] == "×" || this.formulaArr[i] == "÷") temp.push(i);
       }
 
@@ -134,14 +146,12 @@ var app = new Vue({
           if (this.formulaArr[temp[j]] == "×") {
             this.formulaArr[temp[j] + 1] = Number(this.formulaArr[temp[j] - 1]) * Number(this.formulaArr[temp[j] + 1]);
             this.formulaArr[temp[j] - 1] = 0;
-            console.log(this.formulaArr)
           }
           // 除算の場合
           else if (this.formulaArr[temp[j]] == "÷") {
             if (this.formulaArr[temp[j] + 1] == 0) return "Infinity";
             this.formulaArr[temp[j] + 1] = Number(this.formulaArr[temp[j] - 1]) / Number(this.formulaArr[temp[j] + 1]);
             this.formulaArr[temp[j] - 1] = 0;
-            console.log(this.formulaArr)
           }
         }
       }
@@ -150,12 +160,12 @@ var app = new Vue({
       const rmZero = this.formulaArr.filter(f => f !== 0);
       const rmZeroX = rmZero.filter(f => f !== "×");
       const rmZeroXSrash = rmZeroX.filter(f => f !== "÷");
-      console.log(rmZeroXSrash)
+
       if (rmZeroXSrash.length == 0) return 0;
       if (rmZeroXSrash.length == 1) return rmZeroXSrash[0];
 
       // 加算・減算を実行
-      for (let j = 1; j < rmZeroXSrash.length; j += 2) {
+      for (let j = 0; j < rmZeroXSrash.length; j += 1) {
         if (rmZeroXSrash[j + 1] == 0) continue;
         if (rmZeroXSrash[j] == "＋") {
           rmZeroXSrash[j + 1] = Number(rmZeroXSrash[j - 1]) + Number(rmZeroXSrash[j + 1]);
