@@ -71,10 +71,16 @@ var app = new Vue({
         if (this.signs[prevInput] && this.input == "－") {
           this.formulaArr.push("-");
         }
-        // 一つ前が半角マイナスの場合は数字のみマイナスの後に追加する
+        // 一つ前が半角マイナスの場合
         else if (prevInput == "-") {
+          // 入力が数字なら半角マイナスの後ろに追加する
           if (Number(this.input)) {
             this.formulaArr[this.formulaArr.length - 1] += this.input;
+          }
+          // 入力が符号なら差し替える
+          else {
+            this.formulaArr = this.formulaArr.slice(0, this.formulaArr.length - 2);
+            this.formulaArr.push(this.input);
           }
         }
         // 一つ前が符号で入力も符号の場合は差し替える
