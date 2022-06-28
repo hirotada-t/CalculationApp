@@ -1,5 +1,4 @@
-# CalculationApp
-Vue.js Calculation App
+# Vue.js Calculation App
 
 ・Project概要/遊び方
 電卓アプリです。
