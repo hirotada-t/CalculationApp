@@ -22,7 +22,9 @@ var app = new Vue({
         "-": Object.keys(this.signs)[2],
         "+": Object.keys(this.signs)[3],
       }
-
+      if (this.result != "") {
+        this.clearResult();
+      }
       // 数字またはゼロを入力した場合
       if (Number(e.key) || e.key == 0) {
         this.input = e.key;
@@ -45,6 +47,9 @@ var app = new Vue({
     },
 
     checkInput() {
+      if (this.result != "") {
+        this.clearResult();
+      }
       // 最初の入力はマイナスか数字のみ入力可能
       if (this.formulaArr.length == 0) {
         if (this.input == "－" || Number(this.input) || this.input == 0) {
@@ -61,7 +66,7 @@ var app = new Vue({
       }
       else {
         const prevInput = this.formulaArr[this.formulaArr.length - 1];
-        
+
         // 一つ前が符号で入力がマイナスの場合は半角にする
         if (this.signs[prevInput] && this.input == "－") {
           this.formulaArr.push("-");
@@ -74,7 +79,7 @@ var app = new Vue({
         }
         // 一つ前が符号で入力も符号の場合は差し替える
         else if (this.signs[prevInput] && this.signs[this.input]) {
-            this.formulaArr[this.formulaArr.length - 1] = this.input;
+          this.formulaArr[this.formulaArr.length - 1] = this.input;
         }
         // 一つ前がゼロで入力が数字の場合は差し替える
         else if (prevInput == 0 && !this.signs[this.input]) {
@@ -91,13 +96,13 @@ var app = new Vue({
       }
       this.formulaStr = this.formulaArr.join(" ");
     },
-    
+
     checkFormula() {
-      console.log(this.formulaArr)
       // const leftParenthesesIndex = this.checkBrackets("(");
       // const rightParenthesesIndex = this.checkBrackets(")");
 
-      if (this.signs[this.formulaArr[this.formulaArr.length - 1]]) alert("数式の最後を数字にしてください");
+      const lastInput = this.formulaArr[this.formulaArr.length - 1];
+      if (this.signs[lastInput] || lastInput == "-") alert("数式の最後を数字にしてください");
       else if (this.formulaArr.length == 0) alert("数式を入力してください");
       else this.calc();
     },
@@ -114,15 +119,19 @@ var app = new Vue({
 
     calc() {
       this.result = this.calcNum;
-      this.formulaArr = [];
-      this.formulaStr = "";
+      if (9 < this.result.toString().length) {
+        this.result = Number(this.result).toExponential(8)
+      }
     },
-
+    
     bsFormula() {
+      if (this.result != "") {
+        this.clearResult();
+      }
       this.formulaArr.splice(-1, 1);
       this.formulaStr = this.formulaArr.join(" ");
     },
-
+    
     clearResult() {
       this.formulaArr = [];
       this.formulaStr = "";
