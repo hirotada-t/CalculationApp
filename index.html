@@ -12,95 +12,88 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/5c95c5fc96.js" crossorigin="anonymous"></script>
     <script src="./calc.js" defer></script>
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./css/style.css">
 </head>
 
 <body>
 
-    <div id="app">
-
-        <div class="container pt-4">
-            <div class="row">
-                <div class="col-3">
-                    <label for="formula">formula:</label>
-                </div>
-                <div class="col-12">
-                    <input class="w-100" id="formula" type="text" v-model="formulaStr" disabled>
-                </div>
+    <div id="app" class="outer">
+        <div class="waku py-4">
+            <div class="container pt-1 waku_calcArea">
+                <h4>{{formulaStr}}</h4>
+                <h1 class="text-end">{{result}}</h1>
             </div>
-            <div class="row mt-2">
-                <div class="col-3">
-                    <label for="result">result:</label>
-                </div>
-                <div class="col-12">
-                    <input class="w-100" id="result" type="text" v-model="result" disabled />
-                </div>
-            </div>
-        </div>
 
-        <div class="container buttons pt-4">
-            <div class="row gy-3 gx-0">
-                <div class="col-9">
-                    <div class="nums row gy-3 gx-0">
-                        <div class="col-4 text-center" v-for="num of nums" :key="num">
-                            <button class="btn btn-dark btn-lg rounded-circle border-0 p-0" type="button"
-                                @click="inputBtn($event)">{{num}}</button>
+            <div id="inputBtns" class="container buttons pt-4">
+                <div class="row gy-3 gx-0">
+                    <div class="col-9">
+                        <div class="flexDirection row gy-3 gx-0">
+                            <div class="col-4 text-center" v-for="num of nums">
+                                <a class="btnStyling" @click="inputBtn($event)">
+                                    <span class="btnStyling-front">{{num}}</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="flexDirection row gy-3 gx-0 mt-0">
+                            <div class="col-8 text-center functions">
+                                <a class='equal' @click="checkFormula">
+                                    <span class="btnStyling-front">=</span>
+                                </a>
+                            </div>
+                            <div class="col-4 text-center">
+                                <a class="btnStyling" @click="inputBtn($event)">
+                                    <span class="btnStyling-front">0</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
-                    <div class="nums row gy-3 gx-0 mt-0">
-                        <div class="col-8 text-center">
-                            <button class="btn btn-dark btn-lg rounded-pill w-140 border-0 p-0" type="button"
-                                @click="checkFormula" >=</button>
-                        </div>
-                        <div class="col-4 text-center">
-                            <button class="btn btn-dark btn-lg rounded-circle border-0 p-0" type="button"
-                                @click="inputBtn($event)">0</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-3 border-start border-2">
-                    <div class="signs row gy-3 gx-0 mx-auto">
-                        <div class="col-12 text-center" v-for="(value, key) of signs">
-                            <button class="btn btn-secondary btn-lg rounded-circle border-0 p-0" type="button"
-                                @click="inputBtn($event)" >{{key}}</button>
+                    <div class="col-3 border-start border-light border-2">
+                        <div class="signs row gy-3 gx-0 mx-auto">
+                            <div class="col-12 text-center" v-for="(value, key) of signs">
+                                <a class="btnStyling" @click="inputBtn($event)">
+                                    <span class="btnStyling-front">{{key}}</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- <div class="container buttons pt-4">
-            <div class="signs row gy-3 gx-0">
-                <div class="col-3 text-center">
-                    <button class="btn btn-success btn-lg rounded-circle w-120 border-0 p-0" type="button"
+            <!-- <div class="container buttons pt-4">
+                <div class="signs row gy-3 gx-0">
+                    <div class="col-3 text-center">
+                        <button class="btn btn-success btn-lg rounded-circle w-120 border-0 p-0" type="button"
                         @click="bsFormula">sin</button>
-                </div>
-                <div class="col-3 text-center">
-                    <button class="btn btn-success btn-lg rounded-circle w-120 border-0 p-0" type="button"
+                    </div>
+                    <div class="col-3 text-center">
+                        <button class="btn btn-success btn-lg rounded-circle w-120 border-0 p-0" type="button"
                         @click="bsFormula">cos</button>
-                </div>
-                <div class="col-3 text-center">
-                    <button class="btn btn-success btn-lg rounded-circle w-120 border-0 p-0" type="button"
+                    </div>
+                    <div class="col-3 text-center">
+                        <button class="btn btn-success btn-lg rounded-circle w-120 border-0 p-0" type="button"
                         @click="bsFormula">tan</button>
+                    </div>
                 </div>
-            </div>
-        </div> -->
+            </div> -->
 
-        <div class="container buttons pt-4">
-            <div class="signs row gy-3 gx-0">
-                <div class="col-6 text-center">
-                    <button class="btn btn-primary btn-lg rounded-pill w-140 border-0 p-0" type="button"
-                        @click="bsFormula">BS</button>
-                </div>
-                <div class="col-6 text-center">
-                    <button class="btn btn-danger btn-lg rounded-pill w-140 border-0 p-0" type="button"
-                        @click="clearResult">CL</button>
+            <div class="container buttons pt-4">
+                <div class="row gy-3 gx-0">
+                    <div id="BSbtn" class="col-6 text-center">
+                        <a class="bs" @click="bsFormula">
+                            <span class="btnStyling-front">BS</span>
+                        </a>
+                    </div>
+                    <div class="col-6 text-center">
+                        <a class="cl" @click="clearResult">
+                            <span class="btnStyling-front">CL</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
 </body>
 
 </html>
